@@ -1,12 +1,12 @@
-name: Print Users from JSON
+name: Extract Users from JSON
 
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main  # Or your default branch
 
 jobs:
-  print-users:
+  extract-users:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,10 +18,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies (if needed)
-        run: |
-          python -m pip install --upgrade pip
+      - name: Run script to extract users
+        run: python read_users.py
 
-      - name: Run Python Script to Print Users
-        run: |
-          python read_users.py
+      - name: Upload users.json as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: extracted-users
+          path: users.json
