@@ -1,9 +1,9 @@
-name: Extract Users from JSON
+name: Extract Users from Nested JSON
 
 on:
   push:
     branches:
-      - main
+      - main  # Or your development branch
 
 jobs:
   extract-users:
@@ -21,8 +21,8 @@ jobs:
       - name: Run script to extract users
         run: python read_users.py
 
-      - name: Upload users.json as artifact
+      - name: Upload extracted_users.json as artifact
         uses: actions/upload-artifact@v4
         with:
           name: extracted-users
-          path: users.json
+          path: extracted_users.json
