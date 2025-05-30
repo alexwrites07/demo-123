@@ -1,19 +1,17 @@
-name: Extract and Commit Users JSON
+name: Extract Users from JSON
 
 on:
   push:
     branches:
-      - main  # Or your working branch
+      - main  # Or your default branch
 
 jobs:
-  commit-users:
+  extract-users:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -23,11 +21,8 @@ jobs:
       - name: Run script to extract users
         run: python read_users.py
 
-      - name: Commit users.json to repository
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add users.json
-          git commit -m "Auto-generated users.json from data.json"
-          git push
-        continue-on-error: true  # Avoid workflow failure if no changes
+      - name: Upload users.json as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: extracted-users
+          path: users.json
