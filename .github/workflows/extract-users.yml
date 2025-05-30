@@ -19,7 +19,7 @@ jobs:
           python-version: '3.11'
 
       - name: Run extraction script
-        run: python extract_users_preserve_structure.py
+        run: python read_users.py
 
       - name: Upload extracted_users folder as artifact
         uses: actions/upload-artifact@v4
