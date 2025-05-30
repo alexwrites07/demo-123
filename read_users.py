@@ -1,21 +1,31 @@
 import json
 import os
 
-input_path = os.path.join("c", "d", "users.json")
-output_path = "extracted_users.json"
+def extract_all_users(root_folder="c"):
+    combined_users = []
 
-def extract_users():
-    try:
-        with open(input_path, "r") as f:
-            data = json.load(f)
-        users = data.get("users", [])
+    # Walk through all files recursively inside 'c'
+    for dirpath, _, filenames in os.walk(root_folder):
+        for filename in filenames:
+            if filename.endswith(".json"):
+                file_path = os.path.join(dirpath, filename)
+                print(f"Processing: {file_path}")
+                try:
+                    with open(file_path, "r") as f:
+                        data = json.load(f)
+                    users = data.get("users", [])
+                    if isinstance(users, list):
+                        combined_users.extend(users)
+                    else:
+                        print(f"Warning: 'users' key in {file_path} is not a list")
+                except Exception as e:
+                    print(f"Failed to process {file_path}: {e}")
 
-        with open(output_path, "w") as f:
-            json.dump(users, f, indent=2)
+    # Save combined users to a new file
+    with open("combined_users.json", "w") as f:
+        json.dump(combined_users, f, indent=2)
 
-        print(f"✅ Extracted {len(users)} users to {output_path}")
-    except Exception as e:
-        print(f"❌ Error: {e}")
+    print(f"✅ Extracted total {len(combined_users)} users from all JSON files.")
 
 if __name__ == "__main__":
-    extract_users()
+    extract_all_users()
