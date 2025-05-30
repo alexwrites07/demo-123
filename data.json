@@ -1,0 +1,22 @@
+{
+  "appName": "User Directory",
+  "version": "1.0.2",
+  "adminEmail": "admin@example.com",
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "email": "alice@example.com"
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "email": "bob@example.com"
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "email": "charlie@example.com"
+    }
+  ]
+}
