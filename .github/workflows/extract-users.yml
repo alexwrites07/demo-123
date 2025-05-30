@@ -1,28 +1,28 @@
-name: Extract Users from All JSON in 'c'
+name: Extract Users Preserving Structure
 
 on:
   push:
     branches:
-      - main  # your branch
+      - main
 
 jobs:
   extract-users:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
       - name: Run extraction script
-        run: python read_users.py
+        run: python extract_users_preserve_structure.py
 
-      - name: Upload combined_users.json as artifact
+      - name: Upload extracted_users folder as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: combined-users
-          path: combined_users.json
+          name: extracted-users-folder
+          path: extracted_users

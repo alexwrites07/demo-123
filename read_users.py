@@ -1,31 +1,34 @@
 import json
 import os
 
-def extract_all_users(root_folder="c"):
-    combined_users = []
+SRC_ROOT = "c"
+DST_ROOT = "extracted_users"
 
-    # Walk through all files recursively inside 'c'
-    for dirpath, _, filenames in os.walk(root_folder):
+def extract_and_preserve_structure():
+    for dirpath, _, filenames in os.walk(SRC_ROOT):
         for filename in filenames:
             if filename.endswith(".json"):
-                file_path = os.path.join(dirpath, filename)
-                print(f"Processing: {file_path}")
+                src_file_path = os.path.join(dirpath, filename)
+                # Compute relative path from SRC_ROOT
+                rel_path = os.path.relpath(src_file_path, SRC_ROOT)
+                dst_file_path = os.path.join(DST_ROOT, rel_path)
+
+                os.makedirs(os.path.dirname(dst_file_path), exist_ok=True)
+
                 try:
-                    with open(file_path, "r") as f:
+                    with open(src_file_path, "r") as f:
                         data = json.load(f)
+
                     users = data.get("users", [])
-                    if isinstance(users, list):
-                        combined_users.extend(users)
-                    else:
-                        print(f"Warning: 'users' key in {file_path} is not a list")
+
+                    # Save only users array to new file preserving structure
+                    with open(dst_file_path, "w") as f:
+                        json.dump({"users": users}, f, indent=2)
+
+                    print(f"Processed {src_file_path} → {dst_file_path}")
+
                 except Exception as e:
-                    print(f"Failed to process {file_path}: {e}")
-
-    # Save combined users to a new file
-    with open("combined_users.json", "w") as f:
-        json.dump(combined_users, f, indent=2)
-
-    print(f"✅ Extracted total {len(combined_users)} users from all JSON files.")
+                    print(f"Failed to process {src_file_path}: {e}")
 
 if __name__ == "__main__":
-    extract_all_users()
+    extract_and_preserve_structure()
